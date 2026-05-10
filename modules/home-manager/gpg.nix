@@ -22,5 +22,6 @@
         enable = true;
         pinentry.package = pkgs.pinentry-rofi;
     };
-    home.packages = [ pkgs.pinentry-rofi ];
+    home.packages = [ pkgs.pinentry-rofi (pkgs.pass.withExtensions (exts: [ pkgs.passExtensions.pass-otp ])) ];
+
 }
