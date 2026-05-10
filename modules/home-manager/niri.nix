@@ -66,10 +66,10 @@
                 menu = "on-click";
                 menu-file = "${config.home.homeDirectory}/.config/waybar/power_menu.xml";
                 meny-actions = {
-                    shutdown = "shutdown";
-                    reboot = "reboot";
-                    suspend = "systemctl suspend";
-                    hibernate = "systemctl hibernate";
+                    shutdown = "${pkgs.systemd}/bin/systemctl poweroff";
+                    reboot = "${pkgs.systemd}/bin/systemctl reboot";
+                    suspend = "${pkgs.systemd}/bin/systemctl suspend";
+                    hibernate = "${pkgs.systemd}/bin/systemctl hibernate";
                 };
             };
 

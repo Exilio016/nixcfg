@@ -14,6 +14,7 @@
     inputs.self.homeManagerModules.terminal
     inputs.self.homeManagerModules.browser
     inputs.self.homeManagerModules.git
+    inputs.self.homeManagerModules.gpg
     inputs.self.homeManagerModules.nvim
 
     # Or modules exported from other flakes (such as nix-colors):

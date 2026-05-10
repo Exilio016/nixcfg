@@ -4,4 +4,5 @@
     browser = import ./browser.nix;
     git = import ./git.nix;
     nvim = import ./nvim.nix;
+    gpg = import ./gpg.nix;
 }
