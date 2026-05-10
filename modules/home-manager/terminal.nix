@@ -7,7 +7,7 @@
         shellAliases = {
           ll = "ls -l";
           update = "home-manager switch --flake ${config.home.homeDirectory}/nixos#brunofl@nixos";
-          updateSystem = "nixos-rebuild switch --flake ${config.home.homeDirectory}/nixos#";
+          updateSystem = "sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/nixos#";
           updateVersion = "nix flake update";
           gs = "git status";
           gap = "git add -p";
