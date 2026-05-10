@@ -6,9 +6,14 @@
 
         shellAliases = {
           ll = "ls -l";
-          update = "nh home switch ~/nix";
-          updateSystem = "nh os switch ~/nix";
+          update = "home-manager switch --flake ${config.home.homeDirectory}/nixos#brunofl@nixos";
+          updateSystem = "nixos-rebuild switch --flake ${config.home.homeDirectory}/nixos#";
           updateVersion = "nix flake update";
+          gs = "git status";
+          gap = "git add -p";
+          ga = "git add";
+          gc = "git commit";
+          gcp = "git cherry-pick";
         };
 
         initContent = # bash
@@ -27,7 +32,7 @@
             # This command let's me execute arbitrary binaries downloaded through channels such as mason.
             export NIX_LD=$(nix eval --impure --raw --expr 'let pkgs = import <nixpkgs> {}; NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker"; in NIX_LD')
             export TERM="screen-256color"
-            ssh-add ~/.ssh/id_ed25519_sk 2> /dev/null
+            ssh-add ~/.ssh/id_ykmain 2> /dev/null
           '';
 
         oh-my-zsh = {
