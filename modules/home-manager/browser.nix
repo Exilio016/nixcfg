@@ -30,6 +30,8 @@
             config.bind('<z><o><l>', 'spawn --userscript qute-pass --otp-only')
 
             config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}; rv:135.0) Gecko/20100101 Firefox/135', 'https://accounts.google.com/*')
+            
+            c.content.javascript.clipboard = "access-paste"
         '';
 
     };

@@ -321,7 +321,7 @@
             binds {
                 Mod+Shift+Slash { show-hotkey-overlay; }
                 Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-                Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
+                Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn-sh "rofi -show drun"; }
             
                 Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
                 XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
