@@ -519,15 +519,16 @@
         iconTheme.package = pkgs.adwaita-icon-theme;
     };
     
-    home.packages = [ 
-        pkgs.wdisplays
-        pkgs.pywal
-        pkgs.swaybg 
-        pkgs.wpgtk
-        (pkgs.writeShellScriptBin "dmenu" ''
+    home.packages = with pkgs; [ 
+        wdisplays
+        pywal
+        swaybg 
+        wpgtk
+        wl-clipboard-rs
+        (writeShellScriptBin "dmenu" ''
             exec ${pkgs.rofi}/bin/rofi -dmenu "$@"
         '')
-        (pkgs.writeShellScriptBin "bg-update" ''
+        (writeShellScriptBin "bg-update" ''
             SWAYBG=$(pgrep swaybg)
             FOLDER="${config.home.homeDirectory}/nixos/assets/wallpaper"
             IMAGE=$(ls $FOLDER | grep -v "^current$" | dmenu -i -p "Select wallpaper:")

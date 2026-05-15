@@ -5,4 +5,5 @@
         viAlias = true;
         vimAlias = true;
     };
+    environment.systemPackages = [ pkgs.luaPackages.luarocks ];
 }

@@ -98,9 +98,11 @@
                 };
             };
             colors.transparent_background_colors = true;
-
         };
     };
+
+    programs.direnv.enable = true;
+
     home.packages = with pkgs; [ 
         fzf
         ripgrep
@@ -110,5 +112,6 @@
         tree-sitter
         vscode-langservers-extracted
         nodejs
+        savepoint
     ];
 }

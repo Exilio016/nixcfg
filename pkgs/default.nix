@@ -13,4 +13,17 @@ pkgs: {
           cp -aR * $out/share/sddm/themes/simple-sddm-2
         '';
     };
+
+    savepoint = pkgs.rustPlatform.buildRustPackage rec {
+        pname = "savepoint";
+        version = "0.3.12";
+        src = pkgs.fetchFromGitHub {
+            owner = "NamtaoProductions";
+            repo = "savepoint";
+            rev = "v0.3.12";
+            sha256 = "sha256-Mx7zrwK9rwVumFDU7EWhjGai2IEgr++xhaNqv1hFBS4=";
+        };
+        cargoLock.lockFile = "${src}/Cargo.lock";
+        doCheck = false;
+    };
 }
