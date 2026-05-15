@@ -65,7 +65,7 @@
                 format = " ⏻  ";
                 menu = "on-click";
                 menu-file = "${config.home.homeDirectory}/.config/waybar/power_menu.xml";
-                meny-actions = {
+                menu-actions = {
                     shutdown = "${pkgs.systemd}/bin/systemctl poweroff";
                     reboot = "${pkgs.systemd}/bin/systemctl reboot";
                     suspend = "${pkgs.systemd}/bin/systemctl suspend";
@@ -183,10 +183,13 @@
             menu {
                 background: @background;
                 color: @foreground;
+                border: 2px solid;
+                border-radius: 10px;
             }
             menuitem:hover {
                 background: @color1;
                 color: @background;
+                border-radius: 10px;
             }
         '';
     };
