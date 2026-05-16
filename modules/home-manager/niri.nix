@@ -466,6 +466,8 @@
                 Alt+Print { screenshot-window; }
             
                 Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+                Mod+Alt+L { spawn "swaylock"; }
             
                 Mod+Shift+E { quit; }
                 Ctrl+Alt+Delete { quit; }
