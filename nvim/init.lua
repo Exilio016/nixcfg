@@ -58,6 +58,11 @@ local plugins = {
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         }
     },
+    {
+      'nvim-treesitter/nvim-treesitter',
+      lazy = false,
+      build = ':TSUpdate',
+    },
 }
 require("lazy").setup(plugins, opts)
 
@@ -86,6 +91,15 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live gr
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 
+require('nvim-treesitter').install { 'all' }
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { '<filetype>' },
+    callback = function() 
+	vim.treesitter.start() 
+    	vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    	vim.wo[0][0].foldmethod = 'expr'
+    end,
+})
 
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
