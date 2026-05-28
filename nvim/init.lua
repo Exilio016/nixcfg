@@ -66,6 +66,7 @@ local plugins = {
 }
 require("lazy").setup(plugins, opts)
 
+--LSP configuraton --------------
 local lsp_configs = {}
 -- Find all lua files in the lsp configuration directory
 for _, f in pairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
@@ -73,10 +74,19 @@ for _, f in pairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
   table.insert(lsp_configs, server_name)
 end
 
+lsp_enable_override = {
+    gitlab_duo = { enable = false };
+}
+
 -- Enable all found servers
 for _, server in ipairs(lsp_configs) do
   local config = vim.lsp.config[server]
-  if config and config.cmd then
+  local override = lsp_enable_override[server]
+  if override then 
+      if override.enabled then 
+        vim.lsp.enable(server)
+    end
+  elseif config and config.cmd then
       local executable = type(config.cmd) == "table" and config.cmd[1] or config.cmd
       if type(executable) == 'string' and vim.fn.executable(executable) == 1 then
         vim.lsp.enable(server)
@@ -84,6 +94,18 @@ for _, server in ipairs(lsp_configs) do
       -- FIXME: handle function cmd
   end
 end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local bufnr = args.buf
+    local map = function(keys, func, desc)
+      vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+    end
+    map('gd', vim.lsp.buf.definition, 'Goto Definition')
+    map('K', vim.lsp.buf.hover, 'Hover Documentation')
+  end,
+})
+-------------------------------
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })

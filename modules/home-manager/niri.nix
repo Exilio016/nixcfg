@@ -61,9 +61,22 @@
                 spacing = 10;
             };
 
+            clock = {
+                format = "{:%H:%M}  ";
+                tooltip = true;
+                tooltip-format = "<tt><small>{calendar}</small></tt>";
+                calendar = {
+                    mode = "month";
+                    format = {
+                        today = "<span color='#ff6699'><b>{}</b></span>";
+                    };
+                };
+            };
+
             "custom/power" = {
                 format = " ⏻  ";
                 menu = "on-click";
+                tooltip = false;
                 menu-file = "${config.home.homeDirectory}/.config/waybar/power_menu.xml";
                 menu-actions = {
                     shutdown = "${pkgs.systemd}/bin/systemctl poweroff";
@@ -114,6 +127,7 @@
             #backlight {
                 background: @color2;
                 padding: 0 5px;
+                color: @background;
             }
             
             #custom-arrow2 {
@@ -190,6 +204,10 @@
                 background: @color1;
                 color: @background;
                 border-radius: 10px;
+            }
+
+            #calendar-today {
+                color: @color1;
             }
         '';
     };
@@ -277,6 +295,13 @@
                 touchpad {
                     tap
                     natural-scroll
+                }
+                keyboard {
+                    xkb {
+                        options "caps:escape"
+                        layout "br"
+                        variant "abnt2"
+                    }
                 }
             }
             layout {
@@ -468,8 +493,7 @@
                 Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
                 Mod+Alt+L { spawn "swaylock"; }
-            
-                Mod+Shift+E { quit; }
+            Mod+Shift+E { quit; }
                 Ctrl+Alt+Delete { quit; }
             
                 Mod+Shift+P { power-off-monitors; }
@@ -540,8 +564,10 @@
                     kill $SWAYBG
                 fi
                 nohup swaybg -i "$FOLDER/$IMAGE" > /dev/null 2>&1 &
-                wpg -a "$FOLDER/$IMAGE"
+                wpg -A "$FOLDER/$IMAGE"
                 wpg -s "$FOLDER/$IMAGE"
+
+                rm "$FOLDER/''${IMAGE}_wal_sample.png"
 
                 if [ -f "$FOLDER/current" ]; then
                     rm "$FOLDER/current"
@@ -558,3 +584,4 @@
         '')
     ];
 }
+

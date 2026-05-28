@@ -34,5 +34,8 @@
         nautilus
         blueman
         pavucontrol
+        kdePackages.okular
+        xwayland-satellite
+        vlc
     ];
 }

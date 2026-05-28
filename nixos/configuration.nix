@@ -11,6 +11,9 @@
         inputs.self.nixosModules.nvim
         inputs.self.nixosModules.niri
         inputs.self.nixosModules.fonts
+        inputs.self.nixosModules.laptop
+        inputs.self.nixosModules.ld
+        inputs.self.nixosModules.opengl
     ];
 
   nixpkgs = {
