@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
     nixpkgs.overlays = [
         (final: prev: { qutebrowser = prev.qutebrowser.override { 
             enableWideVine = true; 
@@ -37,10 +37,30 @@
     };
     xdg.configFile."qutebrowser/pywalQute" = {
         enable = true;
-        source = builtins.fetchGit {
-            url = "https://github.com/makman12/pywalQute.git";
-            ref = "main";
-            rev = "89f378474f23d4e15dfc8facc3f115686227f8a1";
+        source = pkgs.applyPatches {
+            name = "darkmode-fix";
+            src = builtins.fetchGit { 
+                url = "https://github.com/makman12/pywalQute.git";
+                ref = "main";
+                rev = "89f378474f23d4e15dfc8facc3f115686227f8a1";
+            };
+            patches = [
+                (pkgs.writeText "darkmode.patch" ''
+                    diff --git a/draw.py b/draw.py
+                    index 94cbe26..670f688 100644
+                    --- a/draw.py
+                    +++ b/draw.py
+                    @@ -15,7 +15,7 @@ palette = {
+                         'selection': colorjson["separator"],
+                         'foreground': colorjson["cursor"],
+                         'foreground-alt': colorjson["comment"],
+                    -    'foreground-attention': "#ffffff",
+                    +    'foreground-attention': "#000000",
+                         'comment': colorjson["comment"],
+                         'cyan': colorjson["parens"],
+                         'green': colorjson["function"],
+                '')
+            ];
         };
     };
     
