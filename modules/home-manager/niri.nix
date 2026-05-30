@@ -283,7 +283,6 @@
             environment {
                 QT_QPA_PLATFORM "wayland"
                 QT_STYLE_OVERRIDE "kvantum"
-                GTK_THEME "FlatColor"
                 DISPLAY null
             }
 
@@ -511,45 +510,41 @@
         source = ./pywal-templates;
         recursive = true;
     };
-    home.file.".config/wpg/templates" = {
-        source = ./wpg-templates;
-        recursive = true;
-    };
-    xdg.dataFile."themes" = {
-        source = ./themes;
-        recursive = true;
-    };
 
     systemd.user.tmpfiles.rules = [
-        "L ${config.home.homeDirectory}/.config/Kvantum/Pywal/Pywal.kvconfig - - - -  ${config.home.homeDirectory}/.cache/wal/Kvantum.kvconfig"
-        "L ${config.home.homeDirectory}/.config/Kvantum/Pywal/Pywal.svg - - - -  ${config.home.homeDirectory}/.cache/wal/Kvantum.svg"
         "L ${config.home.homeDirectory}/.config/mako/config - - - -  ${config.home.homeDirectory}/.cache/wal/mako.conf"
         "L ${config.home.homeDirectory}/.config/swaylock/config - - - -  ${config.home.homeDirectory}/.cache/wal/swaylock.conf"
-        "L ${config.home.homeDirectory}/.local/share/themes/FlatColor/gtk-2.0/gtkrc - - - -  ${config.home.homeDirectory}/.config/wpg/templates/gtk2"
-        "L ${config.home.homeDirectory}/.local/share/themes/FlatColor/gtk-3.0/gtk.css - - - -  ${config.home.homeDirectory}/.config/wpg/templates/gtk3"
-        "L ${config.home.homeDirectory}/.local/share/themes/FlatColor/gtk-4.0/gtk.css - - - -  ${config.home.homeDirectory}/.config/wpg/templates/gtk4"
-        "L ${config.home.homeDirectory}/.local/share/themes/FlatColor/gtk-3.20/gtk.css - - - -  ${config.home.homeDirectory}/.config/wpg/templates/gtk3.2"
     ];
 
     xdg.configFile."Kvantum/kvantum.kvconfig" = {
         enable = true;
         text = ''
-            theme=Pywal
+            theme=pywal
         '';
     };
 
     gtk = {
         enable = true;
-        theme.name = "FlatColor";
+        theme.name = "adw-gtk3-dark";
+        theme.package = pkgs.adw-gtk3;
         iconTheme.name = "Adwaita";
         iconTheme.package = pkgs.adwaita-icon-theme;
     };
     
     home.packages = with pkgs; [ 
         wdisplays
-        pywal
+        imagemagick
+        scrot
+        killall
+        (unstablePkgs.pywal16.overrideAttrs ( oldAttrs: {
+            propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [
+                colorz                     
+                python3Packages.colorthief
+                python3Packages.haishoku
+            ];
+        }))
+        gradience
         swaybg 
-        wpgtk
         wl-clipboard-rs
         (writeShellScriptBin "dmenu" ''
             exec ${pkgs.rofi}/bin/rofi -dmenu "$@"
@@ -564,10 +559,7 @@
                     kill $SWAYBG
                 fi
                 nohup swaybg -i "$FOLDER/$IMAGE" > /dev/null 2>&1 &
-                wpg -A "$FOLDER/$IMAGE"
-                wpg -s "$FOLDER/$IMAGE"
-
-                rm "$FOLDER/''${IMAGE}_wal_sample.png"
+                wal --backend haishoku --cols16 dual -i "$FOLDER/$IMAGE"
 
                 if [ -f "$FOLDER/current" ]; then
                     rm "$FOLDER/current"
