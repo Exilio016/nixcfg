@@ -22,9 +22,9 @@
                 tmux attach || tmux
             fi 
 
-            [ -f "${config.home.homeDirectory}/.config/wpg/sequences" ] &&
-                cat "${config.home.homeDirectory}/.config/wpg/sequences"
-            [ -f "${config.home.homeDirectory}/.config/wpg/sequences" ] &&
+            [ -f "${config.home.homeDirectory}/.cache/wal/sequences" ] &&
+                cat "${config.home.homeDirectory}//.cache/wal/sequences"
+            [ -f "${config.home.homeDirectory}//.cache/wal/colors-tty.sh" ] &&
                 source ${config.home.homeDirectory}/.cache/wal/colors-tty.sh
 
             source "$(fzf-share)/key-bindings.zsh"
