@@ -526,7 +526,13 @@
     gtk = {
         enable = true;
         theme.name = "adw-gtk3-dark";
-        theme.package = pkgs.adw-gtk3;
+        theme.package = pkgs.adw-gtk3.overrideAttrs (oldAttrs: {
+            postInstall = (oldAttrs.postInstall or "") + ''
+                patch -p1 $out/share/themes/adw-gtk3-dark/gtk-3.0/gtk.css < ${./patches/gtk3-css.patch}
+                patch -p1 $out/share/themes/adw-gtk3-dark/gtk-3.0/gtk-dark.css < ${./patches/gtk3-dark-css.patch}
+                patch -p1 $out/share/themes/adw-gtk3-dark/gtk-4.0/libadwaita.css < ${./patches/libadwaita-css.patch}
+            '';
+        });
         iconTheme.name = "Adwaita";
         iconTheme.package = pkgs.adwaita-icon-theme;
     };
@@ -543,7 +549,6 @@
                 python3Packages.haishoku
             ];
         }))
-        gradience
         swaybg 
         wl-clipboard-rs
         (writeShellScriptBin "dmenu" ''
