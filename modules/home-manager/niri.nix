@@ -1,4 +1,4 @@
-{ pkgs, config, ... }: 
+{ pkgs, config, ... }:
 {
     services.mako = {
         enable = true;
@@ -283,6 +283,7 @@
             environment {
                 QT_QPA_PLATFORM "wayland"
                 QT_STYLE_OVERRIDE "kvantum"
+                GTK_THEME "adw-gtk3-dark"
                 DISPLAY null
             }
 
@@ -531,12 +532,13 @@
                 patch -p1 $out/share/themes/adw-gtk3-dark/gtk-3.0/gtk.css < ${./patches/gtk3-css.patch}
                 patch -p1 $out/share/themes/adw-gtk3-dark/gtk-3.0/gtk-dark.css < ${./patches/gtk3-dark-css.patch}
                 patch -p1 $out/share/themes/adw-gtk3-dark/gtk-4.0/libadwaita.css < ${./patches/libadwaita-css.patch}
+                patch -p1 $out/share/themes/adw-gtk3-dark/gtk-4.0/libadwaita-tweaks.css < ${./patches/libadwaita-tweaks.patch}
             '';
         });
         iconTheme.name = "Adwaita";
         iconTheme.package = pkgs.adwaita-icon-theme;
     };
-    
+
     home.packages = with pkgs; [ 
         wdisplays
         imagemagick
