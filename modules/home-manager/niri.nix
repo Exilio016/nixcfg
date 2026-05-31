@@ -539,6 +539,12 @@
         iconTheme.package = pkgs.adwaita-icon-theme;
     };
 
+    dconf.settings = {
+        "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+        };
+    };
+
     home.packages = with pkgs; [ 
         wdisplays
         imagemagick
