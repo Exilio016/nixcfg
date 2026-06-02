@@ -22,7 +22,12 @@
     programs.dconf.enable = true;
 
     services.blueman.enable = true;
-
+    programs.steam = {
+        enable = true;
+        package = pkgs.steam.override {
+            extraArgs = "-system-composer";
+        };
+    };
     environment.systemPackages = with pkgs; [ 
         simple-sddm-2
         alacritty fuzzel 
@@ -36,6 +41,8 @@
         pavucontrol
         kdePackages.okular
         xwayland-satellite
+        discord-ptb
+        drawy
         vlc
     ];
 }

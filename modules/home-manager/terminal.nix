@@ -113,5 +113,6 @@
         vscode-langservers-extracted
         nodejs
         savepoint
+        devenv
     ];
 }
