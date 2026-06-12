@@ -29,10 +29,10 @@ pkgs: {
 
     zennotes = pkgs.appimageTools.wrapType2 rec {
         pname = "ZenNotes";
-        version = "2.1.0";
+        version = "2.3.0";
         src = pkgs.fetchurl {
             url = "https://github.com/ZenNotes/zennotes/releases/download/v${version}/ZenNotes-${version}-linux-x86_64.AppImage";
-            hash= "sha256-jGMSov8SI4d3PoADudhtG40n1rcSkt1K1JZEjvW9Tw0=";
+            hash= "sha256-IvFGK7n3KQVGETmt6hQUy+bZNTOCkfuwH8ifl4KTxxw=";
         };
 
         appimageContents = pkgs.appimageTools.extractType2 {
