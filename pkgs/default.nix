@@ -26,4 +26,41 @@ pkgs: {
         cargoLock.lockFile = "${src}/Cargo.lock";
         doCheck = false;
     };
+
+    zennotes = pkgs.appimageTools.wrapType2 rec {
+        pname = "ZenNotes";
+        version = "2.1.0";
+        src = pkgs.fetchurl {
+            url = "https://github.com/ZenNotes/zennotes/releases/download/v${version}/ZenNotes-${version}-linux-x86_64.AppImage";
+            hash= "sha256-jGMSov8SI4d3PoADudhtG40n1rcSkt1K1JZEjvW9Tw0=";
+        };
+
+        appimageContents = pkgs.appimageTools.extractType2 {
+            inherit pname version src;
+        };
+        extraInstallCommands = ''
+          # Install the desktop file so the app appears in your application launcher
+          ls -la ${appimageContents}
+          install -m 444 -D ${appimageContents}/ZenNotes.desktop -t $out/share/applications
+          
+          # Copy icons if they are bundled in standard directories
+          if [ -d "${appimageContents}/usr/share/icons" ]; then
+            cp -r ${appimageContents}/usr/share/icons $out/share/
+          elif [ -f "${appimageContents}/ZenNotes.png" ]; then
+            install -m 444 -D ${appimageContents}/ZenNotes.png $out/share/icons/hicolor/512x512/apps/ZenNotes.png
+          fi
+
+          # Fix the Exec line in the desktop file to point to our wrapped binary
+          substituteInPlace $out/share/applications/ZenNotes.desktop \
+            --replace 'Exec=AppRun' 'Exec=${pname}' \
+            --replace 'Exec=ZenNotes' 'Exec=${pname}'
+        '';
+
+        meta = {
+          description = "Keyboard-first local Markdown notes with Vim motions, diagrams, and MCP integration";
+          homepage = "https://github.com/ZenNotes/zennotes";
+          platforms = [ "x86_64-linux" ];
+          mainProgram = "ZenNotes";
+        };
+    };
 }
