@@ -7,6 +7,7 @@
         enable = true; 
         wayland = {
             enable = true;
+            compositor = "kwin";
         };
         theme = "/run/current-system/sw/share/sddm/themes/simple-sddm-2";
         extraPackages = with pkgs; [ 
