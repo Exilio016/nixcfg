@@ -68,4 +68,13 @@
         enable = true;
         source = ./qute-pass;
     };
+
+    programs.brave = {
+      enable = true;
+      package = pkgs.brave;
+      extensions = [
+        # Bitwarden Password Manager
+        "nngceckbapebfimnlniiiahkandclblb"
+      ];
+    };
 }

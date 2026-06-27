@@ -48,6 +48,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.enableIPv6 = false;
 
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
@@ -103,11 +104,13 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  virtualisation.docker.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.brunofl = {
     isNormalUser = true;
     description = "Bruno Flavio Ferreira";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       kdePackages.kate
