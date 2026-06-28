@@ -4,9 +4,6 @@
         enable = true;
     };
 
-    services.udiskie = {
-        enable = false;
-    };
     programs.waybar = {
         enable = true;
         settings.mainBar = {
@@ -90,6 +87,10 @@
         style = #css
         ''
             @import "${config.home.homeDirectory}/.cache/wal/colors-waybar.css";
+            * {
+                font-family: "JetBrainsMono Nerd Font"; 
+            }
+
             window#waybar {
                 background: alpha(@background, 0.6);
                 color: @foreground;
@@ -248,24 +249,20 @@
         enable = true;
         timeouts = [
           {
-            timeout = 115; # in seconds
-            command = "${pkgs.libnotify}/bin/notify-send 'Locking in 5 seconds' -t 5000";
+            timeout = 255; # in seconds
+            command = "notify-send 'Locking in 5 seconds' -t 5000";
           }
           {
-            timeout = 120;
-            command = "${pkgs.swaylock-effects}/bin/swaylock";
+            timeout = 300;
+            command = "swaylock/bin/swaylock";
           }
           {
-            timeout = 240;
-            command = "${pkgs.systemd}/bin/systemctl suspend";
+            timeout = 600;
+            command = "systemctl suspend";
           }
         ];
         events = [
         ];
-    };
-    programs.swaylock = {
-        enable = true;
-        package = pkgs.swaylock-effects;
     };
 
     xdg.configFile."niri/config.kdl" = {
@@ -273,9 +270,10 @@
         text = #kdl 
         ''
             include "${config.home.homeDirectory}/.cache/wal/colors.kdl";
+            spawn-at-startup "/usr/bin/lxpolkit"
             spawn-at-startup "nm-applet"
             spawn-at-startup "blueman-tray"
-            spawn-at-startup "swaybg" "-i" "${config.home.homeDirectory}/nixos/assets/wallpaper/current"
+            spawn-at-startup "swaybg" "-i" "${config.home.homeDirectory}/nixcfg/assets/wallpaper/current"
             spawn-at-startup "wal" "-R"
 
             prefer-no-csd
@@ -542,7 +540,6 @@
         wdisplays
         imagemagick
         scrot
-        killall
         (unstablePkgs.pywal16.overrideAttrs ( oldAttrs: {
             propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [
                 colorz                     
@@ -557,7 +554,7 @@
         '')
         (writeShellScriptBin "bg-update" ''
             SWAYBG=$(pgrep swaybg)
-            FOLDER="${config.home.homeDirectory}/nixos/assets/wallpaper"
+            FOLDER="${config.home.homeDirectory}/nixcfg/assets/wallpaper"
             IMAGE=$(ls $FOLDER | grep -v "^current$" | dmenu -i -p "Select wallpaper:")
 
             if [ -n "$IMAGE" ]; then 

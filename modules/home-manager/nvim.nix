@@ -13,7 +13,7 @@ let
 in {
 
     systemd.user.tmpfiles.rules = [
-        "L ${config.home.homeDirectory}/.config/nvim - - - -  ${config.home.homeDirectory}/nixos/nvim"
+        "L ${config.home.homeDirectory}/.config/nvim - - - -  ${config.home.homeDirectory}/nixcfg/nvim"
     ];
 
     # Install the CLI tool

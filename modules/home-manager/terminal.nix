@@ -6,8 +6,7 @@
 
         shellAliases = {
           ll = "ls -l";
-          update = "home-manager switch --flake ${config.home.homeDirectory}/nixos#brunofl@nixos";
-          updateSystem = "sudo nixos-rebuild switch --flake ${config.home.homeDirectory}/nixos#";
+          update = "home-manager switch --flake ${config.home.homeDirectory}/nixcfg#brunofl@acerarch";
           updateVersion = "nix flake update";
           gs = "git status";
           gap = "git add -p";
@@ -87,7 +86,7 @@
           '';
     };
     programs.alacritty = {
-        enable = true;
+        enable = false;
         settings = {
             window = {
                 opacity = 0.95;
@@ -112,7 +111,6 @@
         tree-sitter
         vscode-langservers-extracted
         nodejs
-        savepoint
         devenv
     ];
 }
