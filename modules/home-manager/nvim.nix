@@ -16,10 +16,6 @@ in {
         "L ${config.home.homeDirectory}/.config/nvim - - - -  ${config.home.homeDirectory}/nixcfg/nvim"
     ];
 
-    # Install the CLI tool
-    home.packages = [ pkgs.tree-sitter pkgs.gcc ];
-
-    # Point the CLI to the unified grammar store
     xdg.configFile."tree-sitter/config.json".text = builtins.toJSON {
         parser-directories = [
             "${grammarDir}"

@@ -31,6 +31,7 @@
             # This command let's me execute arbitrary binaries downloaded through channels such as mason.
             export NIX_LD=$(nix eval --impure --raw --expr 'let pkgs = import <nixpkgs> {}; NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker"; in NIX_LD')
             export TERM="screen-256color"
+            eval $(ssh-agent) 2>&1 >/dev/null
             ssh-add ~/.ssh/id_ykmain 2> /dev/null
           '';
 
@@ -67,6 +68,7 @@
             set -g mouse on
             set -gq allow-passthrough on
 
+            set-option -g focus-events on
             set-option -g status-position top
             set-option -sg escape-time 10
             set-option -g default-terminal "screen-256color"

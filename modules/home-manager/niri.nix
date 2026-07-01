@@ -245,25 +245,6 @@
             </interface>
         '';
     };
-    services.swayidle = {
-        enable = true;
-        timeouts = [
-          {
-            timeout = 255; # in seconds
-            command = "notify-send 'Locking in 5 seconds' -t 5000";
-          }
-          {
-            timeout = 300;
-            command = "swaylock/bin/swaylock";
-          }
-          {
-            timeout = 600;
-            command = "systemctl suspend";
-          }
-        ];
-        events = [
-        ];
-    };
 
     xdg.configFile."niri/config.kdl" = {
         enable = true;
@@ -273,6 +254,7 @@
             spawn-at-startup "/usr/bin/lxpolkit"
             spawn-at-startup "nm-applet"
             spawn-at-startup "blueman-tray"
+            spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock -f" "timeout" "600" "niri msg action power-off-monitors"
             spawn-at-startup "swaybg" "-i" "${config.home.homeDirectory}/nixcfg/assets/wallpaper/current"
             spawn-at-startup "wal" "-R"
 
@@ -491,7 +473,7 @@
                 Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
                 Mod+Alt+L { spawn "swaylock"; }
-            Mod+Shift+E { quit; }
+                Mod+Shift+E { quit; }
                 Ctrl+Alt+Delete { quit; }
             
                 Mod+Shift+P { power-off-monitors; }
@@ -537,7 +519,6 @@
     };
 
     home.packages = with pkgs; [ 
-        wdisplays
         imagemagick
         scrot
         (unstablePkgs.pywal16.overrideAttrs ( oldAttrs: {
@@ -547,10 +528,8 @@
                 python3Packages.haishoku
             ];
         }))
-        swaybg 
-        wl-clipboard-rs
         (writeShellScriptBin "dmenu" ''
-            exec ${pkgs.rofi}/bin/rofi -dmenu "$@"
+            exec /usr/bin/rofi -dmenu "$@"
         '')
         (writeShellScriptBin "bg-update" ''
             SWAYBG=$(pgrep swaybg)

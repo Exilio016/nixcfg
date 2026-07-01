@@ -1,18 +1,7 @@
 { pkgs, ... }: {
-    nixpkgs.overlays = [
-        (final: prev: { qutebrowser = prev.qutebrowser.override { 
-            enableWideVine = true; 
-            enableVulkan = true;
-        }; })
-    ];
-    programs.qutebrowser = {
+    xdg.configFile."qutebrowser/config.py" = {
         enable = true;
-        settings = {
-            colors.webpage.darkmode.enabled = true;
-            auto_save.session = true;
-            downloads.remove_finished = 30000; #miliseconds
-        };
-        extraConfig = #python
+        text = #python
         ''
             import pywalQute.draw
 
@@ -24,12 +13,16 @@
                     'horizontal': 8
                 }
             })
-            config.bind('<z><l>', 'spawn --userscript qute-pass -U secret -u "login: (.+)"')
-            config.bind('<z><u><l>', 'spawn --userscript qute-pass --username-only -U secret -u "login: (.+)"')
-            config.bind('<z><p><l>', 'spawn --userscript qute-pass --password-only')
-            config.bind('<z><o><l>', 'spawn --userscript qute-pass --otp-only')
+            config.bind('<z><l>', 'spawn --userscript qute-bitwarden')
+            config.bind('<z><u><l>', 'spawn --userscript qute-bitwarden --username-only')
+            config.bind('<z><p><l>', 'spawn --userscript qute-bitwarden --password-only')
+            config.bind('<z><o><l>', 'spawn --userscript qute-bitwarden --otp-only')
 
-            config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}; rv:135.0) Gecko/20100101 Firefox/135', 'https://accounts.google.com/*')
+            config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36')
+            config.set('colors.webpage.darkmode.enabled', True)
+            config.set('auto_save.session', True)
+            config.set('downloads.remove_finished', 30000)
+            config.set('url.searchengines', {"DEFAULT": "https://duckduckgo.com/?q={} !g"})
             
             c.content.javascript.clipboard = "access-paste"
         '';
@@ -64,11 +57,6 @@
         };
     };
     
-    home.file.".local/share/qutebrowser/userscripts/pass" = {
-        enable = true;
-        source = ./qute-pass;
-    };
-
     programs.brave = {
       enable = true;
       package = pkgs.brave;
