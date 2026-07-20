@@ -51,7 +51,10 @@
 
             battery = {
                 format = "{capacity} {icon}";
-                format-icons = [ " " " " ];
+                format-icons = {
+                    default = [ " " " " " " " " " " ];
+                    charging = [ " 󱐋" " 󱐋" " 󱐋" " 󱐋" " 󱐋" ];
+                };
             };
 
             tray = {
