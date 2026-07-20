@@ -379,6 +379,8 @@
                 Mod+Shift+J     { focus-monitor-down; }
                 Mod+Shift+K     { focus-monitor-up; }
                 Mod+Shift+L     { focus-monitor-right; }
+                
+                Mod+Alt+R { spawn "sh" "-c" "niri msg output eDP-1 off && niri msg output eDP-1 on"; }
             
                 Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
                 Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }

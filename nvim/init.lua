@@ -89,7 +89,11 @@ local plugins = {
     {
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' }
-    }
+    },
+    {
+      "idelice/nvim-jls",
+      opts = {},
+    },
 }
 require("lazy").setup(plugins, opts)
 
