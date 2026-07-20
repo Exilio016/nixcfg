@@ -326,6 +326,17 @@
             }
 
             window-rule {
+                match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
+                open-floating true
+                default-floating-position x=10 y=10 relative-to="bottom-right"
+            }
+
+            window-rule {
+                match app-id=r#"^steam_app_\d+$"#
+                open-floating true
+            }
+
+            window-rule {
                 open-maximized true
             }
             
