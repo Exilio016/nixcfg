@@ -31,8 +31,11 @@
             # This command let's me execute arbitrary binaries downloaded through channels such as mason.
             export NIX_LD=$(nix eval --impure --raw --expr 'let pkgs = import <nixpkgs> {}; NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker"; in NIX_LD')
             export TERM="screen-256color"
+            export EDITOR="vim"
             eval $(ssh-agent) 2>&1 >/dev/null
             ssh-add ~/.ssh/id_ykmain 2> /dev/null
+
+            export PATH="$HOME/.local/bin:$PATH"
           '';
 
         oh-my-zsh = {
@@ -110,7 +113,6 @@
         yazi
         nil
         inotify-tools
-        tree-sitter
         vscode-langservers-extracted
         nodejs
         devenv

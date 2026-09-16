@@ -45,7 +45,10 @@
 
             pulseaudio = {
                 format = "{volume} {icon}";
-                format-icons = [ " " " " ];
+                format-icons = {
+                    default = [ " " " " ];
+                    default-muted = [ " " ];
+                };
                 on-click = "pavucontrol";
             };
 
@@ -217,7 +220,8 @@
     };
     xdg.configFile."waybar/power_menu.xml" = {
         enable = true;
-        text = ''
+        text = #xml
+            ''
             <?xml version="1.0" encoding="UTF-8"?>
             <interface>
                 <object class="GtkMenu" id="menu">
@@ -542,7 +546,17 @@
                 colorz                     
                 python3Packages.colorthief
                 python3Packages.haishoku
+                python3Packages.setuptools
+                python3Packages.packaging
+                python3Packages.installer
+                python3Packages.pytest
             ];
+            # Bypass the broken nixpkgs pypaInstallPhase hook
+            installPhase = ''
+                runHook preInstall
+                python -m installer --destdir="/" --prefix="$out" dist/*.whl
+                runHook postInstall
+            '';
         }))
         (writeShellScriptBin "dmenu" ''
             exec /usr/bin/rofi -dmenu "$@"

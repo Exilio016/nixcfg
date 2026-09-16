@@ -20,7 +20,10 @@
     };
     services.gpg-agent = {
         enable = true;
-        pinentry.package = pkgs.pinentry-rofi;
+        extraConfig = ''
+            pinentry-program /usr/bin/pinentry-qt
+        '';
+
     };
     home.packages = [ pkgs.pinentry-rofi (pkgs.pass.withExtensions (exts: [ pkgs.passExtensions.pass-otp ])) ];
 

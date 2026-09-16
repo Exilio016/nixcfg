@@ -94,6 +94,14 @@ local plugins = {
       "idelice/nvim-jls",
       opts = {},
     },
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "theHamsta/nvim-dap-virtual-text",
+        },
+    },
 }
 require("lazy").setup(plugins, opts)
 
@@ -121,11 +129,13 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help ta
 
 require('nvim-treesitter').install { 'all' }
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { '<filetype>' },
-    callback = function()
-	vim.treesitter.start()
-    	vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    	vim.wo[0][0].foldmethod = 'expr'
+    pattern = { '*' },
+    callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if lang and vim.treesitter.language.add(lang) then
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+	        vim.treesitter.start()
+        end
     end,
 })
 
@@ -155,6 +165,15 @@ handle:start(wal_cache, {}, vim.schedule_wrap(function(err, filename, events)
     vim.cmd.colorscheme("pywal16")
 end))
 
+
+local function macro_recording()
+  local reg = vim.fn.reg_recording()
+  if reg == "" then
+    return ""
+  end
+  return "⏺ Recording @" .. reg
+end
+
 require('lualine').setup {
   options = {
     theme = 'pywal',
@@ -167,7 +186,7 @@ require('lualine').setup {
     lualine_c = {
       '%=', --[[ add your center components here in place of this comment ]]
     },
-    lualine_x = {},
+    lualine_x = { { macro_recording, color = {fg = "#ff9e64", gui = "bold"}} },
     lualine_y = { 'filetype', 'lsp_status', 'progress' },
     lualine_z = {
       { 'location', separator = { right = '' }, left_padding = 2 },
@@ -184,3 +203,88 @@ require('lualine').setup {
   tabline = {},
   extensions = {'mason'},
 }
+
+vim.lsp.config['ledger-lsp'] = {
+    cmd = { 'ledger-lsp' },
+    filetypes = { 'ledger', 'hledger', 'journal' },
+}
+vim.lsp.enable('ledger-lsp')
+
+local dap = require('dap')
+local ui = require('dapui')
+ui.setup()
+require('nvim-dap-virtual-text').setup()
+
+dap.adapters.gdb = {
+  type = "executable",
+  command = "gdb",
+  args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
+}
+dap.configurations.c = {
+  {
+    name = "Launch",
+    type = "gdb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    args = function ()
+        return vim.fn.input('Arguments: ')
+    end,
+    cwd = "${workspaceFolder}",
+    stopAtBeginningOfMainSubprogram = false,
+  },
+  {
+    name = "Select and attach to process",
+    type = "gdb",
+    request = "attach",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    pid = function()
+      local name = vim.fn.input('Executable name (filter): ')
+      return require("dap.utils").pick_process({ filter = name })
+    end,
+    cwd = '${workspaceFolder}'
+  },
+  {
+    name = 'Attach to gdbserver :1234',
+    type = 'gdb',
+    request = 'attach',
+    target = 'localhost:1234',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}'
+  }
+}
+dap.configurations.cpp = dap.configurations.c
+dap.configurations.rust = dap.configurations.c
+
+vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint' })
+vim.keymap.set('n', '<leader>gb', dap.run_to_cursor, { desc = '[Debug] Run to cursor' })
+vim.keymap.set('n', '<leader>?', function ()
+    ui.eval(nil, {enter = true})
+end, { desc = '[Debug] Eval line' })
+vim.keymap.set('n', '<F1>', dap.continue, { desc = '[Debug] Continue' })
+vim.keymap.set('n', '<F2>', dap.step_into, { desc = '[Debug] Step into' })
+vim.keymap.set('n', '<F3>', dap.step_over, { desc = '[Debug] Step over' })
+vim.keymap.set('n', '<F4>', dap.step_out, { desc = '[Debug] Step out' })
+vim.keymap.set('n', '<F5>', dap.step_back, { desc = '[Debug] Step back' })
+vim.keymap.set('n', '<F13>', dap.restart, { desc = '[Debug] Restart' })
+
+dap.listeners.before.attach.dapui_config = function ()
+    ui.open()
+end
+
+dap.listeners.before.launch.dapui_config = function ()
+    ui.open()
+end
+
+dap.listeners.before.event_terminated.dapui_config = function ()
+    ui.close()
+end
+
+dap.listeners.before.event_exited.dapui_config = function ()
+    ui.close()
+end

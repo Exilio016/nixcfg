@@ -40,6 +40,7 @@
             
             c.content.javascript.clipboard = "access-paste"
             c.content.autoplay = False
+            c.editor.command = ["nvim", "--server", "/tmp/nvimsocket", "--remote-wait", "{file}", "-c", "normal {line}G{column0}l"]
         '';
 
     };
