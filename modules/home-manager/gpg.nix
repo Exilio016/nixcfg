@@ -1,6 +1,9 @@
 { pkgs, config, ... }: {
     programs.gpg = {
         enable = true;
+        scdaemonSettings = {
+            disable-ccid = true;
+        };
         publicKeys = [
             {
                 source = pkgs.fetchurl {
@@ -23,7 +26,6 @@
         extraConfig = ''
             pinentry-program /usr/bin/pinentry-qt
         '';
-
     };
     home.packages = [ pkgs.pinentry-rofi (pkgs.pass.withExtensions (exts: [ pkgs.passExtensions.pass-otp ])) ];
 
