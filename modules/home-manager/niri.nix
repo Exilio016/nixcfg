@@ -1,11 +1,11 @@
 { pkgs, config, ... }:
 {
     services.mako = {
-        enable = true;
+        enable = false;
     };
 
     programs.waybar = {
-        enable = true;
+        enable = false;
         settings.mainBar = {
             layer = "top";
             reload_style_on_change = true;
@@ -264,12 +264,14 @@
             spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock -f" "timeout" "600" "niri msg action power-off-monitors"
             spawn-at-startup "swaybg" "-i" "${config.home.homeDirectory}/nixcfg/assets/wallpaper/current"
             spawn-at-startup "wal" "-R"
+            spawn-at-startup "dbus-update-activation-environment" "DISPLAY" "XAUTHORITY" "WAYLAND_DISPLAY"
+            spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets"
 
             prefer-no-csd
 
             environment {
-                QT_QPA_PLATFORM "wayland"
-                QT_STYLE_OVERRIDE "kvantum"
+                QT_QPA_PLATFORM "wayland;xcb"
+                QT_QPA_PLATFORMTHEME "qt6ct"
                 GTK_THEME "adw-gtk3-dark"
                 DISPLAY ":0"
             }
@@ -316,7 +318,7 @@
                     color "#0007"
                 }
             }
-            spawn-at-startup "waybar"
+            spawn-at-startup "quickshell"
             screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
             
             window-rule {
@@ -516,6 +518,10 @@
     systemd.user.tmpfiles.rules = [
         "L ${config.home.homeDirectory}/.config/mako/config - - - -  ${config.home.homeDirectory}/.cache/wal/mako.conf"
         "L ${config.home.homeDirectory}/.config/swaylock/config - - - -  ${config.home.homeDirectory}/.cache/wal/swaylock.conf"
+        "L ${config.home.homeDirectory}/.config/swaylock/config - - - -  ${config.home.homeDirectory}/.cache/wal/swaylock.conf"
+        "L ${config.home.homeDirectory}/.config/Kvantum/pywal/pywal.kvconfig - - - -  ${config.home.homeDirectory}/.cache/wal/pywal.kvconfig"
+        "L ${config.home.homeDirectory}/.config/Kvantum/pywal/pywal.svg - - - -  ${config.home.homeDirectory}/.cache/wal/pywal.svg"
+        "L ${config.home.homeDirectory}/.config/quickshell/Colors.qml - - - -  ${config.home.homeDirectory}/.cache/wal/Colors.qml"
     ];
 
     xdg.configFile."Kvantum/kvantum.kvconfig" = {
@@ -529,8 +535,8 @@
         enable = true;
         theme.name = "adw-gtk3-dark";
         theme.package = pkgs.adw-gtk3;
-        iconTheme.name = "Adwaita";
-        iconTheme.package = pkgs.adwaita-icon-theme;
+        iconTheme.name = "breeze-dark";
+        # iconTheme.package = pkgs.adwaita-icon-theme;
     };
 
     dconf.settings = {
@@ -579,7 +585,7 @@
                 fi
                 ln -s "$FOLDER/$IMAGE" "$FOLDER/current"
                 tmux source-file "${config.home.homeDirectory}/.config/tmux/tmux.conf"
-                makoctl reload
+                # makoctl reload
 
                 BROWSER=$(pgrep -f qutebrowser)
                 if [ -n "$BROWSER" ]; then
